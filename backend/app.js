@@ -2,6 +2,8 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
 require("dotenv").config();
 
 const sauceRoutes = require("./routes/sauce");
@@ -24,6 +26,12 @@ const app = express();
 app.use(cors());
 
 app.use(express.json());
+
+// Data sanitization against NoSQL query injection
+app.use(mongoSanitize());
+
+// Data sanitization against XSS
+app.use(xss());
 
 app.use("/images", express.static(path.join(__dirname, "images")));
 
