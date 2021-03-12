@@ -60,7 +60,6 @@ exports.deleteSauce = (req, res) => {
 exports.likeSauce = (req, res) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
-      console.log(req.body);
       let message;
       switch (req.body.like) {
         case 1:

@@ -2,13 +2,14 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
+require("dotenv").config();
 
 const sauceRoutes = require("./routes/sauce");
 const userRoutes = require("./routes/user");
 
 mongoose
   .connect(
-    "mongodb+srv://superRoot:JD9OsFHb2gp9V6kN@cluster0.pnp3d.mongodb.net/soPekocko?retryWrites=true&w=majority",
+    `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.pnp3d.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true,

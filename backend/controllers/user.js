@@ -1,13 +1,13 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const CryptoJS = require("crypto-js");
+require("dotenv").config();
 
 const User = require("../models/User");
 
-const cryptedEmail = (reqEmail) => CryptoJS.HmacSHA256(reqEmail, "JD9OsFHb2gp9V6kN").toString();
+const cryptedEmail = (reqEmail) => CryptoJS.HmacSHA256(reqEmail, process.env.CRYPTO_KEY).toString();
 
 exports.signup = (req, res) => {
-  console.log(cryptedEmail(req.body.email));
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
@@ -39,7 +39,7 @@ exports.login = (req, res) => {
           }
           res.status(200).json({
             userId: user._id,
-            token: jwt.sign({ userId: user._id }, "JD9OsFHb2gp9V6kN", {
+            token: jwt.sign({ userId: user._id }, process.env.JWT_TOKEN, {
               expiresIn: "24h",
             }),
           });
