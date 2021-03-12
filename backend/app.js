@@ -7,11 +7,14 @@ const sauceRoutes = require("./routes/sauce");
 const userRoutes = require("./routes/user");
 
 mongoose
-  .connect("mongodb+srv://LcsGa:oc-projet6@cluster0.pnp3d.mongodb.net/soPekocko?retryWrites=true&w=majority", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  })
+  .connect(
+    "mongodb+srv://superRoot:JD9OsFHb2gp9V6kN@cluster0.pnp3d.mongodb.net/soPekocko?retryWrites=true&w=majority",
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+    }
+  )
   .then(() => console.log("Connexion à MongoDB Atlas réussie !"))
   .catch(() => console.error("Connexion à MongoDB Atlas échouée !"));
 

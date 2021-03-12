@@ -60,6 +60,7 @@ exports.deleteSauce = (req, res) => {
 exports.likeSauce = (req, res) => {
   Sauce.findOne({ _id: req.params.id })
     .then((sauce) => {
+      console.log(req.body);
       let message;
       switch (req.body.like) {
         case 1:
@@ -71,9 +72,9 @@ exports.likeSauce = (req, res) => {
           message = "Sauce dislikée !";
           break;
         case 0: {
-          sauce.usersLiked.includes(req.body.userId)
-            ? (sauce.usersLiked = sauce.usersLiked.filter((userId) => userId !== req.body.userId))
-            : (sauce.usersDisliked = sauce.usersDisliked.filter((userId) => userId !== req.body.userId));
+          ["usersLiked", "usersDisliked"].forEach(
+            (opinion) => (sauce[opinion] = sauce[opinion].filter((userId) => userId !== req.body.userId))
+          );
           message = "Aucun avis sur la sauce !";
         }
       }

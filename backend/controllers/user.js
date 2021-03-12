@@ -1,14 +1,18 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const CryptoJS = require("crypto-js");
 
 const User = require("../models/User");
 
+const cryptedEmail = (reqEmail) => CryptoJS.HmacSHA256(reqEmail, "JD9OsFHb2gp9V6kN").toString();
+
 exports.signup = (req, res) => {
+  console.log(cryptedEmail(req.body.email));
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
       const user = new User({
-        email: req.body.email,
+        email: cryptedEmail(req.body.email),
         password: hash,
       });
       user
@@ -22,7 +26,7 @@ exports.signup = (req, res) => {
 };
 
 exports.login = (req, res) => {
-  User.findOne({ email: req.body.email })
+  User.findOne({ email: cryptedEmail(req.body.email) })
     .then((user) => {
       if (!user) {
         return res.status(401).json({ error: "Utilisateur non trouvé !" });
@@ -35,12 +39,12 @@ exports.login = (req, res) => {
           }
           res.status(200).json({
             userId: user._id,
-            token: jwt.sign({ userId: user._id }, "SOPEKOCKO_SECRET_TOKEN", {
+            token: jwt.sign({ userId: user._id }, "JD9OsFHb2gp9V6kN", {
               expiresIn: "24h",
             }),
           });
         })
-        .catch((err) => res.statis(500).json({ err }));
+        .catch((err) => res.status(500).json({ err }));
     })
     .catch((err) => res.status(500).json({ err }));
 };
