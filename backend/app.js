@@ -23,6 +23,7 @@ mongoose
 
 const app = express();
 
+// Authorize every origins when sharing ressources between multiple origins
 app.use(cors());
 
 app.use(express.json());
