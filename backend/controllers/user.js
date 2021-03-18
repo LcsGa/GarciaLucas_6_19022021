@@ -8,12 +8,6 @@ const User = require("../models/User");
 const cryptedEmail = (reqEmail) => CryptoJS.HmacSHA256(reqEmail, process.env.CRYPTO_KEY).toString();
 
 exports.signup = (req, res) => {
-  if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-+!*$@%_])([-+!*$@%_\w]{8,15})$/.test(req.body.password)) {
-    return res.status(417).json({
-      message:
-        "Votre mot de passe est trop faible ! Celui-ci doit faire entre 8 et 15 caractères (inclus) et contenir au moins : 1 majuscule, 1 minuscule, 1 chiffre et 1 caractère spécial !",
-    });
-  }
   bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
