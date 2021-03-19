@@ -1,4 +1,11 @@
+# general
 node_modules
 package-lock.json
-images
+
+# backend
 .env
+backend/images/*
+!backend/images/.gitkeep
+
+# frontend
+!frontend/**/images/
