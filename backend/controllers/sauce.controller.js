@@ -29,7 +29,7 @@ exports.sauce = async (req, res) => {
 };
 
 exports.sauceModify = (req, res) => {
-  deleteSauceImage(req, res, async () => {
+  modifySauceImage(req, res, async () => {
     try {
       await modifySauce(req.params.id, req);
       res.status(200).json({ message: "Sauce modifiée !" });
@@ -39,15 +39,21 @@ exports.sauceModify = (req, res) => {
   });
 };
 
-exports.sauceDelete = (req, res) => {
-  deleteSauceImage(req, res, async () => {
-    try {
-      await deleteSauce(req.params.id);
-      res.status(200).json({ message: "Sauce supprimée !" });
-    } catch (err) {
-      res.status(400).json(err);
-    }
-  });
+exports.sauceDelete = async (req, res) => {
+  try {
+    const sauce = await getSauce(req.params.id);
+    const filename = sauce.imageUrl.split("/images/")[1];
+    fs.unlink(`images/${filename}`, async () => {
+      try {
+        await deleteSauce(req.params.id);
+        res.status(200).json({ message: "Sauce supprimée !" });
+      } catch (err) {
+        res.status(400).json(err);
+      }
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
 };
 
 exports.sauceLike = async (req, res) => {
@@ -65,11 +71,11 @@ exports.sauceLike = async (req, res) => {
   }
 };
 
-const deleteSauceImage = async (req, res, callback) => {
+const modifySauceImage = async (req, res, callback) => {
   try {
     const sauce = await getSauce(req.params.id);
     const filename = sauce.imageUrl.split("/images/")[1];
-    fs.unlink(`images/${filename}`, callback);
+    req.file ? fs.unlink(`images/${filename}`, callback) : callback();
   } catch (err) {
     res.status(500).json(err);
   }
